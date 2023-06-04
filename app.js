@@ -5,29 +5,27 @@ const express = require("express");
 const mysql = require("mysql2");
 const dotenv = require("dotenv");
 const cors = require("cors");
-
-dotenv.config();
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 // 이런 게 미들웨어....
 const app = express(); // express 모듈 불러옴
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
 
 const options = {
-	definition: {
-		openapi: '3.0.0',
-		info: {
-			title: 'API',
-			version: '1.0.0',
-			description: 'API documentation',
-		},
-		servers: [
-			{
-				url: 'http://localhost:3000',
-			},
-		],
-	},
-	apis: ['./routes/*.js'],
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "API",
+            version: "1.0.0",
+            description: "API documentation",
+        },
+        servers: [
+            {
+                url: "http://localhost:3000",
+            },
+        ],
+    },
+    apis: ["./routes/*.js"],
 };
 
 const specs = swaggerJsDoc(options);
@@ -35,14 +33,16 @@ const specs = swaggerJsDoc(options);
 app.use(
     cors({
         origin: "*", // 모든 출처 허용 옵션. true를 써도 된다.
-		credentials: true
+        credentials: true,
     })
 );
 
-app.use('/api-docs', swaggerUI.serve);
-app.get('/api-docs', swaggerUI.setup(specs));
+app.use("/api-docs", swaggerUI.serve);
+app.get("/api-docs", swaggerUI.setup(specs));
 
 const port = 3000;
+
+dotenv.config();
 
 const connection = mysql.createConnection({
     // connection 생성
