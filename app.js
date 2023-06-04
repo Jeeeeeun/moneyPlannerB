@@ -25,7 +25,7 @@ const options = {
             },
         ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["routes/*.js"],
 };
 
 const specs = swaggerJsDoc(options);
@@ -69,20 +69,3 @@ app.get("/getCurrency", async (req, res) => {
 app.listen(port, () => {
     console.log(`port ${port}에서 서버가 실행되었습니다.`);
 });
-
-/*
-@swagger
-/getCurrency:
-	get:
-		summary: Returns a list of currency data.
-		description:
-		produces:
-			- application/json
-			responses:
-				200:
-					description: A list of currency.
-					schema:
-						type: array
-						items:
-							$ref: '#/definitions/Currency'
-*/
