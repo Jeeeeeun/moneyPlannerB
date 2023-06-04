@@ -10,6 +10,27 @@ dotenv.config();
 
 // 이런 게 미들웨어....
 const app = express(); // express 모듈 불러옴
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
+
+const options = {
+	definition: {
+		openapi: '3.0.0',
+		info: {
+			title: 'API',
+			version: '1.0.0',
+			description: 'API documentation',
+		},
+		servers: [
+			{
+				url: 'http://localhost:3000',
+			},
+		],
+	},
+	apis: ['./routes/*.js'],
+};
+
+const specs = swaggerJsDoc(options);
 
 app.use(
     cors({
@@ -17,6 +38,9 @@ app.use(
 		credentials: true
     })
 );
+
+app.use('/api-docs', swaggerUI.serve);
+app.get('/api-docs', swaggerUI.setup(specs));
 
 const port = 3000;
 
