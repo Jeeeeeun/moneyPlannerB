@@ -59,6 +59,7 @@ app.get("/getCurrency", async (req, res) => {
         const [rows, fields] = await connection.query(
             "SELECT country_code, country_name, concat(symbol, exchange_rate) as exchange_rate FROM currencies"
         );
+		res.header('Access-Control-Allow-Origin', '*');
         res.send(rows);
     } catch (err) {
         console.log("DB 연결 실패");
