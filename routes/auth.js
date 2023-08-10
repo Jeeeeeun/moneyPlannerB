@@ -42,7 +42,7 @@ router.post("/login", async (req, res) => {
 
 	try {
 
-		const user = await User.findOne({where: {email}}); // 비밀번호도 일치하는지 찾는게 나아요
+		const user = await User.findOne({where: {email}});
 		
 		// 유저가 없을 경우
 		if (user === null) {
@@ -53,6 +53,14 @@ router.post("/login", async (req, res) => {
 
 		if (isPwValid) {
 			const token = jwt.sign({userEmail: user.email}, 'YOUR_SECRET_KEY(토큰 해제할 때 키)', {expiresIn: '1h'});
+
+			res.cookie('token', token, {
+				httpOnly: false,
+				expires: new Date(Date.now() + 1 * 3600000), // 1시간 후 쿠키 만료
+				secure: false, // 나중에 https로만 접근할 수 있게 하려면 값을 process.env.NODE_ENV === 'production'로 바꾸기
+				sameSite: 'Lax', // CSRF 공격 방지를 위한 설정
+			})
+
 			res.status(200).json({token: token});
 		} else {
 			res.status(401).send('비밀번호가 일치하지 않습니다.');

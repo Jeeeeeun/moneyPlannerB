@@ -38,7 +38,7 @@ app.use(
     cors({
         // 백엔드에서 CORS 설정해주는 부분.
         // 프론트엔드와 백엔드가 다른 도메인에서 실행될 경우 이 설정이 필요함.
-        origin: "*", // 모든 출처 허용 옵션. true를 써도 된다.
+        origin: "http://localhost:3001", // 모든 출처 허용 옵션. true를 써도 된다.
         credentials: true,
     })
 );
