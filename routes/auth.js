@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');  // User 모델 가져오기
+//const crypto = require('crypto');
 
 
 // 회원가입 라우터
@@ -37,6 +38,10 @@ router.post("/signUp", async (req, res) => {
 // 로그인 라우터
 router.post("/login", async (req, res) => {
 
+	// 임시 secret key 발급 코드
+	//const secret = crypto.randomBytes(32).toString('hex');
+	//console.log('Generated secret: ', secret);
+
 	// HTTP 요청 본문에 포함된 email과 password를 가저옴
 	const {email, password} = req.body;
 
@@ -52,10 +57,10 @@ router.post("/login", async (req, res) => {
 		const isPwValid = await bcrypt.compare(password, user.password);
 
 		if (isPwValid) {
-			const token = jwt.sign({userEmail: user.email}, 'YOUR_SECRET_KEY(토큰 해제할 때 키)', {expiresIn: '1h'});
+			const token = jwt.sign({userEmail: user.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
 
 			res.cookie('token', token, {
-				httpOnly: false,
+				httpOnly: true,
 				expires: new Date(Date.now() + 1 * 3600000), // 1시간 후 쿠키 만료
 				secure: false, // 나중에 https로만 접근할 수 있게 하려면 값을 process.env.NODE_ENV === 'production'로 바꾸기
 				sameSite: 'Lax', // CSRF 공격 방지를 위한 설정
@@ -71,4 +76,17 @@ router.post("/login", async (req, res) => {
 	}
 });
 
+
+// 로그아웃 라우터
+router.post('/logout', async (req, res) => {
+	// 토큰을 삭제하는 쿠키를 설정
+	res.cookie('token', '', {
+		httpOnly: true,
+		expires: new Date(0), // 만료시간을 과거로 설정해 토큰을 삭제
+		secure: false,
+		sameSite: 'Lax',
+	})
+
+	res.status(200).send('로그아웃 되었습니다.')
+})
 module.exports = router;

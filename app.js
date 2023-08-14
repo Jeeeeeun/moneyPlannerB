@@ -38,7 +38,7 @@ app.use(
     cors({
         // 백엔드에서 CORS 설정해주는 부분.
         // 프론트엔드와 백엔드가 다른 도메인에서 실행될 경우 이 설정이 필요함.
-        origin: "http://localhost:3001", // 모든 출처 허용 옵션. true를 써도 된다.
+        origin: "http://localhost:3001", // *: 모든 출처 허용 옵션. true를 써도 된다.
         credentials: true,
     })
 );
@@ -52,7 +52,7 @@ app.use("/api-docs", swaggerUI.serve);
 app.get("/api-docs", swaggerUI.setup(specs));
 app.use("/", authRouter);
 app.use("/", authRouter);
-app.use("/getCurrencyList", currencyRouter);
+app.use("/api/getCurrencyList", currencyRouter);
 
 // 서버 실행
 app.listen(port, () => {
